@@ -101,8 +101,6 @@ public class GraphActivity extends AppCompatActivity {
                 } else if (mois == 2) {
                     boolean estBissextile = (annee % 4 == 0 && annee % 100 != 0) || (annee % 400 == 0);
                     maxDays = estBissextile ? 29 : 28;
-                } else {
-                    maxDays = 31;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -118,17 +116,18 @@ public class GraphActivity extends AppCompatActivity {
 
                 if (isMois) {
                     try {
-                        String[] dateTime = heureStr.split(" ");
-                        String[] dateParts = dateTime[0].split("-");
+
+                        String[] dateParts = heureStr.split("-");
                         int jour = Integer.parseInt(dateParts[2]);
 
-                        String[] timeParts = dateTime[1].split(":");
-                        int heure = Integer.parseInt(timeParts[0]);
-                        int minute = Integer.parseInt(timeParts[1]);
 
-                        xValue = jour + (heure / 24f) + (minute / 1440f);
+                        int annee = Integer.parseInt(dateParts[0]);
+                        int mois = Integer.parseInt(dateParts[1]);
+
+
+                        xValue=jour;
                     } catch (Exception e) {
-                        xValue = i;
+                        xValue = 7;
                     }
                 } else {
                     labelsX.add(heureStr.substring(11, 16));
@@ -145,9 +144,7 @@ public class GraphActivity extends AppCompatActivity {
                 }
             };
 
-            // ==========================================
-            // CONFIGURATION GRAPHIQUE TEMPÉRATURE
-            // ==========================================
+
             LineDataSet tempSet = new LineDataSet(tempEntries, "Température (°C)");
             styleLine(tempSet, Color.parseColor("#F44336"), isMois);
 
@@ -171,8 +168,8 @@ public class GraphActivity extends AppCompatActivity {
 
             // Personnalisation de l'abscisse (Axe X)
             XAxis xAxisTemp = chartTemp.getXAxis();
-            xAxisTemp.setLabelRotationAngle(-45f); // INCLINAISON POUR ÉVITER LE CHEVAUCHEMENT
-            xAxisTemp.setLabelCount(15, false);    // FORCE L'AFFICHAGE DE PLUS DE VALEURS
+            xAxisTemp.setLabelRotationAngle(-45f);
+            xAxisTemp.setLabelCount(15, false);
 
             if (isMois) {
                 xAxisTemp.setValueFormatter(monthFormatter);
@@ -185,7 +182,7 @@ public class GraphActivity extends AppCompatActivity {
                 xAxisTemp.setAxisMaximum(data.length() - 1);
                 xAxisTemp.setGranularity(1f);
             }
-            // Marge en bas pour ne pas couper les textes inclinés
+
             chartTemp.setExtraBottomOffset(15f);
             chartTemp.invalidate();
             chartTemp.animateX(800);
